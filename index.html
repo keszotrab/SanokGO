@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <title>Moja Strona Główna</title>
 </head>
+
 <body>
 
     <header>
-        <h1>Witaj na mojej stronie</h1>
+        <h1>SanokGO</h1>
     </header>
 
+    <nav> Main, About, Profile, Personal Website Link, Lithia map*</nav>
+
     <main>
-        <h2>O stronie</h2>
-        <p>To jest przykładowa zawartość pliku <strong>index.html</strong>. Plik ten stanowi zazwyczaj stronę główną (stronę startową) Twojej witryny internetowej. Możesz w tym miejscu umieścić dowolne informacje o sobie, swojej firmie czy pasjach.</p>
-        <p>Aby strona wyglądała unikalnie, wystarczy edytować kod HTML w sekcji <code>&lt;main&gt;</code> lub dodać własne arkusze stylów.</p>
+        <div class="map_container">
+            <div id="map" style="height: 400px; width: 100%;"></div>
+        </div>
+
     </main>
 
     <footer>
@@ -22,4 +29,41 @@
     </footer>
 
 </body>
+
 </html>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+
+    var map = L.map('map').setView([52.2297, 21.0122], 13);
+    map.locate({ setView: true, maxZoom: 16 });
+
+    function onLocationFound(e) {
+        var radius = e.accuracy;
+
+        L.marker(e.latlng).addTo(map)
+            .bindPopup("Jesteś w promieniu " + radius + " metrów od tego punktu").openPopup();
+
+        L.circle(e.latlng, radius).addTo(map);
+    }
+
+
+    // 2. Dodaj warstwę kafelków (podkład mapy) z OpenStreetMap
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
+    }).addTo(map);
+
+    
+
+
+    
+    // // 3. Opcjonalnie: dodaj marker (znacznik)
+    // L.marker([52.2297, 21.0122]).addTo(map)
+    //     .bindPopup('To jest Twoja lokalizacja!')
+    //     .openPopup();
+
+</script>
