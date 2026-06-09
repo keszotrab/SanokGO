@@ -36,34 +36,98 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
+    var radius;
 
     var map = L.map('map').setView([52.2297, 21.0122], 13);
-    map.locate({ setView: true, maxZoom: 16 });
+    map.locate({ watch: true, setView: true, maxZoom: 16 });
 
     function onLocationFound(e) {
-        var radius = e.accuracy;
+        radius = (e.accuracy > 100) ? 100 : (e.accuracy < 50) ? 50 : e.accuracy;
 
         L.marker(e.latlng).addTo(map)
             .bindPopup("Jesteś w promieniu " + radius + " metrów od tego punktu").openPopup();
 
-        L.circle(e.latlng, radius).addTo(map);
+        L.circle(e.latlng, radius).addTo(map);           //update to move the radius when user is moving
     }
 
 
-    // 2. Dodaj warstwę kafelków (podkład mapy) z OpenStreetMap
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
     }).addTo(map);
 
-    
+
+    map.on('locationfound', onLocationFound);                  // Fix up the fuction so no more cirlces appear
+
+    function onLocationError(e) {
+        (e.message)
+    }
+
+    map.on('locationerror', onLocationError);
+
+    // Tworzymy funkcję, która wykona się po kliknięciu
+    function onMapClick(e) {
+        console.log("Kliknięto w: " + e.latlng.lat + ", " + e.latlng.lng);
+    }
+
+    map.on('click', onMapClick);
 
 
-    
-    // // 3. Opcjonalnie: dodaj marker (znacznik)
-    // L.marker([52.2297, 21.0122]).addTo(map)
-    //     .bindPopup('To jest Twoja lokalizacja!')
-    //     .openPopup();
+
+    let pointsOfInterest = [];
+
+    fetch('./data/POI.JSON')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(place => {
+                place.visited = false;
+                place.marker = L.marker([place.lat, place.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${place.name}</b><br>${place.info}`);
+                pointsOfInterest.push(place);
+            });
+        })
+        .catch(error => console.error('Błąd ładowania JSON:', error));
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // TO JEST TAK BARDZO NIEZOPTYMALIZOWANE, ŻE AŻ MNIE BOLI XD, ALE PÓKI CO BĘDZIE
+
+
+
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+
+    map.on('locationfound', function (e) {
+        const userLatLng = e.latlng;
+        const proximityRadius = 50;
+
+        pointsOfInterest.forEach(p => {
+
+            const dist = userLatLng.distanceTo([p.lat, p.lng]);
+
+            if (dist < proximityRadius && p.visited === false) {
+                p.visited = true;
+
+                p.marker.setIcon(greenIcon);
+                p.marker.setPopupContent(`<b>${p.name}</b><br>Status: Odwiedzone! ✅`)
+                    .openPopup();
+
+                console.log(`Odkryłeś nowe miejsce: ${p.name}!`);
+            }
+        });
+    });
+
 
 </script>

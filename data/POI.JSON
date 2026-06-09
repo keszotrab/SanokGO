@@ -1,0 +1,28 @@
+[
+    {
+        "name": "MOSIR Wierchy",
+        "lat":  49.56593821227685, 
+        "lng": 22.202800512313846,
+        "info": "Stadion piłkarsko-lekkoatletyczny „Wierchy”"
+    },
+    {
+        "name": "Muzeum Budownictwa Ludowego",
+        "lat": 49.5700,
+        "lng": 22.2100,
+        "info": "Piękny skansen w Sanoku."
+    },
+    {
+        "name": "Sklep Kaufland",
+        "lat": 49.56679300420437,
+        "lng": 22.206284701824192,
+        "info": "Market"
+    },
+    {
+        "name": "Przystanek Most Białogórski",
+        "lat": 49.57349513268401,
+        "lng": 22.20269858837128,
+        "info": "Przystanek autobusowy"
+    }
+]
+
+
