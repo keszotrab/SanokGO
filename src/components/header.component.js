@@ -1,40 +1,36 @@
+import { logOff } from "../services/userService.js";
+
 class SanGoHeader extends HTMLElement {
   connectedCallback() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
     this.innerHTML = `
     <header>
         <div class="nav-bar">
             <a href="index.html" class="nav-link">
                 <h1>SanokGO</h1>
             </a>
-            <a href="" class="nav-link">About</a>
-            <a href="#" id="profile-link">Profile/Login</a>
+            <a href="#" id="profile-link"> <h3>${isLoggedIn ? "Profile" : "Login"} </h3></a>
+            ${isLoggedIn ? '<button id="btn-logout" style="cursor:pointer; margin-left:10px;">Wyloguj</button>' : ""}
         </div>
     </header>
     `;
 
-
-    ////// code
-
     const profileLink = this.querySelector("#profile-link");
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const profileText = document.getElementById("profile-link")
+    const logoutBtn = this.querySelector("#btn-logout");
 
-    profileLink.addEventListener("click", function (event) {
+    profileLink.addEventListener("click", (event) => {
       event.preventDefault();
-
-      if (isLoggedIn) {
-        window.location.href = "profile.html";
-      } else {
-        window.location.href = "login.html";
-      }
+      window.location.href = isLoggedIn ? "profile.html" : "login.html";
     });
-    if (isLoggedIn) {
-      profileText.innerText = "Profile";
-    } else {
-      profileText.innerText = "Login";
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        logOff();
+        window.location.href = "login.html";
+      });
     }
   }
 }
-
 
 customElements.define("sanokgo-header", SanGoHeader);

@@ -10,8 +10,8 @@
 
 
 
-    <script src="./components/header.component.js" defer></script>
-    <script src="./components/footer.component.js" defer></script>
+    <script src="./components/header.component.js" type="module"></script>
+    <script src="./components/footer.component.js" type="module"></script>
 
 
     <title>Login</title>
@@ -28,15 +28,15 @@
                 <h2>Logowanie</h2>
                 <input type="text" id="login-email" placeholder="Email">
                 <input type="password" id="login-pass" placeholder="Hasło">
-                <button onclick="handleLogin()">Zaloguj</button>
-                <p>Nie masz konta? <a href="#" onclick="toggleAuth()">Zarejestruj się</a>
+                <button id="btn-login">Zaloguj</button>
+                <p>Nie masz konta? <a id="link-login" href="#">Zarejestruj się</a>
             </div>
             <div id="register-form-div" style="display: none;">
                 <h2>Rejestracja</h2>
                 <input type="text" id="reg-email" placeholder="Email">
                 <input type="password" id="reg-pass" placeholder="Hasło">
-                <button onclick="handleRegister()">Stwórz konto</button>
-                <p>Masz już konto? <a href="#" onclick="toggleAuth()">Zaloguj się</a></p>
+                <button id="btn-reg">Stwórz konto</button>
+                <p>Masz już konto? <a id="link-reg" href="#">Zaloguj się</a></p>
             </div>
         </div>
     </div>
@@ -45,7 +45,55 @@
 
 
 </body>
-<script>
+
+<script type="module">
+    import { loginUser, registerUser } from "./services/userService.js";
+
+
+    function toggleAuth() {
+        document.getElementById("login-form-div").style.display =
+            document.getElementById("login-form-div").style.display === "none" ? "block" : "none";
+        document.getElementById("register-form-div").style.display =
+            document.getElementById("register-form-div").style.display === "none" ? "block" : "none";
+    };
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("btn-login").addEventListener("click", () => {
+            const email = document.getElementById("login-email").value;
+            const pass = document.getElementById("login-pass").value;
+
+            if (loginUser(email, pass)) {
+                window.location.href = "index.html";
+            } else {
+                alert("Błąd logowania!");
+            }
+        });
+
+        document.getElementById("link-reg").addEventListener("click", (e) => { e.preventDefault(); toggleAuth(); });
+        document.getElementById("link-reg").addEventListener("click", (e) => { e.preventDefault(); toggleAuth(); });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("btn-reg").addEventListener("click", () => {
+            const email = document.getElementById("reg-email").value;
+            const pass = document.getElementById("reg-pass").value;
+
+            if (!email || !pass) return alert("Wypełnij pola!");
+
+            const isRegistered = registerUser(email, pass);
+            if (isRegistered.success == false) {
+                alert(isRegistered.msg);
+            }
+            alert("Konto założone! Możesz się zalogować.");
+            toggleAuth();
+
+
+        });
+
+        document.getElementById("link-reg").addEventListener("click", (e) => { e.preventDefault(); toggleAuth(); });
+        document.getElementById("link-login").addEventListener("click", (e) => { e.preventDefault(); toggleAuth(); });
+    });
 
 
 </script>
