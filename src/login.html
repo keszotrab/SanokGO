@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./style.css" />
+
+    <script src="./components/header.component.js" defer></script>
+    <script src="./components/footer.component.js" defer></script>
+    
+    <script src="./services/userService.js" type="module"></script>
+
+    <title>Login</title>
+</head>
+
+<body>
+
+    <sanokgo-header></sanokgo-header>
+
+
+    <div class="login-container">
+        <div class="log-forms">
+            <div id="login-form-div">
+                <h2>Logowanie</h2>
+                <input type="text" id="login-email" placeholder="Email">
+                <input type="password" id="login-pass" placeholder="Hasło">
+                <button onclick="handleLogin()">Zaloguj</button>
+                <p>Nie masz konta? <a href="#" onclick="toggleAuth()">Zarejestruj się</a>
+            </div>
+            <div id="register-form-div" style="display: none;">
+                <h2>Rejestracja</h2>
+                <input type="text" id="reg-email" placeholder="Email">
+                <input type="password" id="reg-pass" placeholder="Hasło">
+                <button onclick="handleRegister()">Stwórz konto</button>
+                <p>Masz już konto? <a href="#" onclick="toggleAuth()">Zaloguj się</a></p>
+            </div>
+        </div>
+    </div>
+
+    <sanokgo-footer></sanokgo-footer>
+
+
+</body>
+
+
+<script src="./model/user.model.js"></script>
+<script src="./services/userService.js"></script>
+<script>
+
+
+</script>

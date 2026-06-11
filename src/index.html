@@ -6,164 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./style.css" />
-    <title>Moja Strona Główna</title>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./services/mapService.js" type="module"></script>
+
+    <script src="./components/header.component.js" defer></script>
+    <script src="./components/footer.component.js" defer></script>
+
+    <script src="./services/userService.js" type="module"></script>
+    <title>Main Map Page</title>
 </head>
 
 <body>
 
-    <header>
-        <div class="nav_bar">
-            <h1>SanokGO</h1>
-            <a href="" class="nav-link">About</a>
-            <a href="" class="nav-link" >Profile</a>
-        </div>
-    </header>
+    <sanokgo-header></sanokgo-header>
 
     <main>
-        <div class="map_container">
+        <div class="map-container">
             <div id="map"></div>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Wszelkie prawa zastrzeżone.</p>
-        <div>
-            <p> Author's Websites: </p>
-            <a href="">Author's ugly page, because he doesn't have time to make it pretty</a> <br>
-            <a href="">WIP of Lithia Map</a>
-
-        </div>
-    </footer>
-
+    <sanokgo-footer></sanokgo-footer>
 </body>
 
 </html>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 
 <script>
-    var radius;
-
-    var map = L.map('map').setView([52.2297, 21.0122], 13);
-    map.locate({ watch: true, setView: true, maxZoom: 16 });
 
 
 
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
-    }).addTo(map);
-
-    function onLocationError(e) {
-        (e.message)
-    }
-
-    map.on('locationerror', onLocationError);
-
-
-
-
-
-    let pointsOfInterest = [];
-
-    fetch('./data/POI.JSON')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(place => {
-                place.visited = false;
-                place.marker = L.marker([place.lat, place.lng])
-                    .addTo(map)
-                    .bindPopup(`<b>${place.name}</b><br>${place.info}`);
-                pointsOfInterest.push(place);
-            });
-        })
-        .catch(error => console.error('Błąd ładowania JSON:', error));
-
-
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-    var greenIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-
-
-    //User tracking and location checking
-    //#region userLocationTracking
-    var userCircle;
-    var userMarker;
-    var isUserMapPopup = false;
-
-    function onLocationFound(e) {
-        radius = 70; //(e.accuracy > 100) ? 100 : (e.accuracy < 50) ? 50 : e.accuracy;
-
-        if (userMarker) {
-            map.removeLayer(userMarker);
-        }
-
-        if (userCircle) {
-            map.removeLayer(userCircle);
-        }
-
-        if (!isUserMapPopup) {
-            userMarker = L.marker(e.latlng).addTo(map)
-                .bindPopup("Jesteś w promieniu " + radius + " metrów od tego punktu").openPopup();
-            isUserMapPopup = true;
-        }
-        else {
-            userMarker = L.marker(e.latlng).addTo(map);
-        }
-
-        userCircle = L.circle(e.latlng, radius).addTo(map);
-
-        console.log("Meep")
-    }
-
-    map.on('locationfound', onLocationFound);                  // Fix up the fuction so no more cirlces appear
-
-
-    map.on('locationfound', function (e) {
-        const userLatLng = e.latlng;
-        const proximityRadius = 70;
-
-        pointsOfInterest.forEach(p => {
-
-            const dist = userLatLng.distanceTo([p.lat, p.lng]);
-
-            if (dist < proximityRadius && p.visited === false) {
-                p.visited = true;
-
-                p.marker.setIcon(greenIcon);
-                p.marker.setPopupContent(`<b>${p.name}</b><br>Status: Odwiedzone! ✅`)
-                    .openPopup();
-
-                console.log(`Odkryłeś nowe miejsce: ${p.name}!`);
-            }
-        });
-    });
-    //#endregion
-
-    //Debug
-    //#region Debug
-
-    function onMapClick(e) {
-        console.log("Kliknięto w: " + e.latlng.lat + ", " + e.latlng.lng);
-    }
-
-    map.on('click', onMapClick);
-
-    //#endregion
-
-
-
-    
 </script>

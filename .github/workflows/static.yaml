@@ -2,7 +2,7 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ["main"] # Replace with your branch name if different
+    branches: ["main"] 
 
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './src' # THIS TELLS GITHUB TO USE YOUR SRC FOLDER
+          path: './src' 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
