@@ -1,5 +1,6 @@
 # SanokGO
 ## PL:  
+### Opis
 Aplikacja SanokGO to mała turystyczna aplikacja zawierająca mapę z interesującymi miejscami w Sanoku, automatycznie odznaczająca miejsca, które zalogowany użytkownik już odwiedził. Aplikacja została napisana w HTML, CSS, JS bez użycia żadnych frameworków.   
 
 ### Szybki start
