@@ -34,3 +34,4 @@ class SanGoHeader extends HTMLElement {
 }
 
 customElements.define("sanokgo-header", SanGoHeader);
+                                                                  // ten kod powinien byc ladniej ulozony, ale to na przyszlosc
